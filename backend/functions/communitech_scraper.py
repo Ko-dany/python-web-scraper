@@ -11,7 +11,7 @@ def is_scroll_at_bottom(page):
 
     return scroll_height - client_height <= scroll_top + 1
 
-def communictech_scraper():
+def communictech_scraper(keyword):
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(headless=False)
         url_communitech = "https://www1.communitech.ca/jobs"
@@ -29,7 +29,7 @@ def communictech_scraper():
         page.click(".sc-beqWaB.kQSjka:first-of-type") # Selects the first item - "Waterloo Region"
 
         time.sleep(2)
-        page.get_by_placeholder("Job title, company or keyword").fill("test")
+        page.get_by_placeholder("Job title, company or keyword").fill(keyword)
 
         # Load more if needed
         '''
@@ -43,7 +43,7 @@ def communictech_scraper():
                 while not is_scroll_at_bottom(page):
                     loading = page.query_selector('[class="sc-beqWaB dCSNrJ"]')
                     if loading:
-                        time.sleep(3)          
+                        time.sleep(3)               
                     page.keyboard.down("End")
                     loading.scroll_into_view_if_needed()
             else:
@@ -79,5 +79,3 @@ def communictech_scraper():
             print("=============================")
 
         print(f"Total {len(job_list)} jobs!")
-
-communictech_scraper()
