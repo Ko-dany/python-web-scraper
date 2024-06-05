@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+import "./App.css";
+
 function App() {
   const [data, setData] = useState("");
   const [keyword, setKeyword] = useState("");
@@ -17,13 +19,6 @@ function App() {
         console.error("Error fetching data: ", error);
       });
   }, []);
-
-  const getKeyword = (event) => {
-    setKeyword(event.target.value);
-    console.log(event.target.value);
-  };
-
-  const onClick = () => {};
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -45,7 +40,7 @@ function App() {
   };
 
   return (
-    <div>
+    <div className="classApp">
       <header>
         <h1>Hello from React!</h1>
         <h1>{data}</h1>
