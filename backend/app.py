@@ -23,10 +23,15 @@ def search_keyword():
     data = request.get_json()
     keyword = data.get("keyword")
     if keyword:
-        response_message = function_keyword(keyword)
-        return jsonify({
-            "message": response_message
-        })
+        try:
+            response_message = function_keyword(keyword)
+            return jsonify({
+                "message": response_message
+            })
+        except Exception as e:
+            return jsonify({
+                "message": str(e)
+            }), 500
     else:
         return jsonify({
             "message": "We didn't receive the keyword..."

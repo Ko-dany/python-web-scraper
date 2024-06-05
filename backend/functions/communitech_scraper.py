@@ -1,8 +1,8 @@
 import asyncio
-from playwright.sync_api import sync_playwright
+from playwright.async_api import async_playwright, Playwright
 import time
 from bs4 import BeautifulSoup
-import csv
+import tracemalloc
 
 def is_scroll_at_bottom(page):
     scroll_height = page.evaluate('(document.documentElement || document.body).scrollHeight')
@@ -11,25 +11,23 @@ def is_scroll_at_bottom(page):
 
     return scroll_height - client_height <= scroll_top + 1
 
-def communictech_scraper(keyword):
-    with sync_playwright() as playwright:
-        browser = playwright.chromium.launch(headless=False)
+async def communictech_scraper(keyword):
+    async with async_playwright() as playwright:
+        browser = await playwright.chromium.launch(headless=False)
+        page = await browser.new_page()
         url_communitech = "https://www1.communitech.ca/jobs"
+        await page.goto(url_communitech)
 
-        page = browser.new_page()
-        page.goto(url_communitech)
+        # time.sleep(2) # Waits for 2 seconds
+        await page.get_by_placeholder("Location").click()
+        # time.sleep(2)
+        await page.get_by_placeholder("Type to search").fill("Waterloo Region")
+        # time.sleep(2)
+        await page.click(".sc-beqWaB.kQSjka:first-of-type") # Selects the first item - "Waterloo Region"
 
-        time.sleep(2) # Waits for 2 seconds
-        page.get_by_placeholder("Location").click()
-
-        time.sleep(2)
-        page.get_by_placeholder("Type to search").fill("Waterloo Region")
-
-        time.sleep(2)
-        page.click(".sc-beqWaB.kQSjka:first-of-type") # Selects the first item - "Waterloo Region"
-
-        time.sleep(2)
-        page.get_by_placeholder("Job title, company or keyword").fill(keyword)
+        # time.sleep(2)
+        await page.get_by_placeholder("Job title, company or keyword").fill(keyword)
+        await page.keyboard.down("End")
 
         # Load more if needed
         '''
@@ -50,14 +48,12 @@ def communictech_scraper(keyword):
                 break
         '''
 
-        time.sleep(2)
-        content = page.content()
-        job_list = []
-
-        browser.close()
-
+        # time.sleep(2)
+        content = await page.content()
         soup = BeautifulSoup(content, "html.parser")
         jobs = soup.find_all("div", class_="job-card")
+
+        job_list = []
 
         for job in jobs:
             company = job.find("div", itemprop="hiringOrganization").find("meta", itemprop="name")["content"]
@@ -79,3 +75,9 @@ def communictech_scraper(keyword):
             print("=============================")
 
         print(f"Total {len(job_list)} jobs!")
+
+        await browser.close()
+
+        return job_list
+
+asyncio.run(communictech_scraper("python"))
