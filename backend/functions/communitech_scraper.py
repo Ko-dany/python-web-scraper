@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import tracemalloc
 
 def page_of_results(number_of_result):
-    full_page = number_of_result//20
+    full_page = number_of_result //20
     remainder = number_of_result % 20
 
     return full_page  if remainder > 0 else full_page - 1
@@ -27,39 +27,16 @@ async def communitech_scraper(keyword):
         time.sleep(2)
 
         await page.locator("#content > div.sc-beqWaB.eFnOti > div.sc-beqWaB.sc-gueYoa.krgmev.MYFxR > div.sc-beqWaB.iJyEXG > div > div").click()
+        await page.locator("#content > div.sc-beqWaB.eFnOti > div.sc-beqWaB.sc-gueYoa.krgmev.MYFxR > div.sc-beqWaB.jfIxNQ > button").click()
 
         element = await page.query_selector("div.sc-beqWaB.iJyEXG > div > div > div > div > b")
         if element:
             total = await element.text_content()
-        print(total)
-
-        # time.sleep(3)
-        # await page.keyboard.press("End")
-
-        for x in range(page_of_results(int(total))):
-            time.sleep(2)
-            await page.keyboard.press("End")
-            print("Scrolling! => ", x)
-
-        # Load more if needed
-        '''
-        while True:
-            button = page.query_selector('[data-testid="load-more"]')
-            if button:
-                button.click()
-                time.sleep(5)                
-                page.keyboard.down("End")
-
-                while not is_scroll_at_bottom(page):
-                    loading = page.query_selector('[class="sc-beqWaB dCSNrJ"]')
-                    if loading:
-                        time.sleep(3)               
-                    page.keyboard.down("End")
-                    loading.scroll_into_view_if_needed()
-            else:
-                break
-        '''
-
+            for x in range(page_of_results(int(total))):
+                time.sleep(3)
+                await page.keyboard.press("End")
+                print("Scrolling! => ", x)
+        
         time.sleep(3)
         content = await page.content()
         soup = BeautifulSoup(content, "html.parser")
@@ -93,5 +70,5 @@ async def communitech_scraper(keyword):
         return job_list
         
 
-asyncio.run(communitech_scraper("python"))
+asyncio.run(communitech_scraper("test"))
 
