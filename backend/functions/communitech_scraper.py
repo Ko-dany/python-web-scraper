@@ -4,6 +4,12 @@ import time
 from bs4 import BeautifulSoup
 import tracemalloc
 
+def page_of_results(number_of_result):
+    full_page = number_of_result//20
+    remainder = number_of_result % 20
+
+    return full_page  if remainder > 0 else full_page - 1
+
 async def communitech_scraper(keyword):
     async with async_playwright() as playwright:
         browser = await playwright.chromium.launch(headless=False)
@@ -20,15 +26,20 @@ async def communitech_scraper(keyword):
         await page.get_by_placeholder("Job title, company or keyword").fill(keyword)
         time.sleep(2)
 
+        await page.locator("#content > div.sc-beqWaB.eFnOti > div.sc-beqWaB.sc-gueYoa.krgmev.MYFxR > div.sc-beqWaB.iJyEXG > div > div").click()
+
         element = await page.query_selector("div.sc-beqWaB.iJyEXG > div > div > div > div > b")
         if element:
             total = await element.text_content()
         print(total)
 
-        time.sleep(3)
-        await page.keyboard.press("End")
+        # time.sleep(3)
+        # await page.keyboard.press("End")
 
-
+        for x in range(page_of_results(int(total))):
+            time.sleep(2)
+            await page.keyboard.press("End")
+            print("Scrolling! => ", x)
 
         # Load more if needed
         '''
