@@ -4,14 +4,7 @@ import time
 from bs4 import BeautifulSoup
 import tracemalloc
 
-def is_scroll_at_bottom(page):
-    scroll_height = page.evaluate('(document.documentElement || document.body).scrollHeight')
-    client_height = page.evaluate('(window.innerHeight || document.documentElement.clientHeight)')
-    scroll_top = page.evaluate('(document.documentElement || document.body).scrollTop')
-
-    return scroll_height - client_height <= scroll_top + 1
-
-async def communictech_scraper(keyword):
+async def communitech_scraper(keyword):
     async with async_playwright() as playwright:
         browser = await playwright.chromium.launch(headless=False)
         page = await browser.new_page()
@@ -20,14 +13,22 @@ async def communictech_scraper(keyword):
 
         # time.sleep(2) # Waits for 2 seconds
         await page.get_by_placeholder("Location").click()
-        # time.sleep(2)
         await page.get_by_placeholder("Type to search").fill("Waterloo Region")
-        # time.sleep(2)
-        await page.click(".sc-beqWaB.kQSjka:first-of-type") # Selects the first item - "Waterloo Region"
+        await page.click(".sc-beqWaB.kQSjka:first-of-type")
+        time.sleep(2)
 
-        # time.sleep(2)
         await page.get_by_placeholder("Job title, company or keyword").fill(keyword)
-        await page.keyboard.down("End")
+        time.sleep(2)
+
+        element = await page.query_selector("div.sc-beqWaB.iJyEXG > div > div > div > div > b")
+        if element:
+            total = await element.text_content()
+        print(total)
+
+        time.sleep(3)
+        await page.keyboard.press("End")
+
+
 
         # Load more if needed
         '''
@@ -48,7 +49,7 @@ async def communictech_scraper(keyword):
                 break
         '''
 
-        # time.sleep(2)
+        time.sleep(3)
         content = await page.content()
         soup = BeautifulSoup(content, "html.parser")
         jobs = soup.find_all("div", class_="job-card")
@@ -71,13 +72,15 @@ async def communictech_scraper(keyword):
                 "url":url
             })
 
-            print(company, title, locations, url)
-            print("=============================")
+            # print(company, title, locations, url)
+            # print("=============================")
 
         print(f"Total {len(job_list)} jobs!")
 
         await browser.close()
 
         return job_list
+        
 
-asyncio.run(communictech_scraper("python"))
+asyncio.run(communitech_scraper("python"))
+

@@ -39,6 +39,18 @@ function App() {
     }
   };
 
+  const handleExecution = async (event) => {
+    try {
+      const response = await axios.post("http://localhost:5000/execute");
+      console.log("Executing Web Scraper...");
+      console.log(response);
+    } catch (error) {
+      console.log("Error occurred: ", error);
+      setResponse("Error: Could not get a response from the server.");
+      console.log(response);
+    }
+  };
+
   return (
     <div className="classApp">
       <header>
@@ -54,6 +66,8 @@ function App() {
           }}
         />
         <button onClick={handleSubmit}>Search</button>
+        <br />
+        <button onClick={handleExecution}>Execute Web Scraper</button>
       </main>
     </div>
   );
