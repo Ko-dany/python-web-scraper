@@ -7,6 +7,7 @@ function App() {
   const [data, setData] = useState("");
   const [keyword, setKeyword] = useState("");
   const [response, setResponse] = useState("");
+  const [jobs, setJobs] = useState("");
 
   // Inital Fetching
   useEffect(() => {
@@ -25,29 +26,17 @@ function App() {
 
     console.log(keyword);
     try {
-      const response = await axios.post("http://localhost:5000/search", {
+      const res = await axios.post("http://localhost:5000/search", {
         keyword: keyword,
       });
-      setResponse(response.data.message);
-      console.log(response);
+      setJobs(res.data);
+      console.log(jobs);
 
+      setResponse("");
       setKeyword("");
     } catch (error) {
       console.log("Error occurred: ", error);
       setResponse("Error: Could not get a response from the server.");
-      console.log(response);
-    }
-  };
-
-  const handleExecution = async (event) => {
-    try {
-      const response = await axios.post("http://localhost:5000/execute");
-      console.log("Executing Web Scraper...");
-      console.log(response);
-    } catch (error) {
-      console.log("Error occurred: ", error);
-      setResponse("Error: Could not get a response from the server.");
-      console.log(response);
     }
   };
 
@@ -66,8 +55,6 @@ function App() {
           }}
         />
         <button onClick={handleSubmit}>Search</button>
-        <br />
-        <button onClick={handleExecution}>Execute Web Scraper</button>
       </main>
     </div>
   );
