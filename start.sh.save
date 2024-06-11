@@ -1,0 +1,8 @@
+source 	venv/bin/activate
+
+cd backend
+flask run --debug &
+
+cd ../frontend
+npm start
+

@@ -52,7 +52,8 @@ async def communitech_scraper(keyword):
                 locations = []
                 for tag in location_tags:
                     locations.append(tag.text)
-                url = f"https://www1.communitech.ca{job.find("div", class_="job-info").find("a")["href"]}"
+                url = f"https://www1.communitech.ca{job.find('div', class_='job-info').find('a')['href']}"
+
 
                 job_list.append({
                     "title":title,
