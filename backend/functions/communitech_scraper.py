@@ -62,10 +62,6 @@ async def communitech_scraper(keyword):
                     "url":url
                 })
 
-                # ***** Print the extracted data *****
-                # print(company, title, locations, url)
-                # print("=============================")
-
             print(f"Total {len(job_list)} jobs!")
 
             await browser.close()

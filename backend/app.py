@@ -9,9 +9,6 @@ CORS(app)
 
 db = {}
 
-def function_keyword(keyword):
-    return f"I got the data: {keyword}"
-
 @app.route("/api/data")
 def get_data():
     data = {
@@ -25,8 +22,8 @@ def search_keyword():
     keyword = data.get("keyword")
     if keyword:
         try:
-            # response_message = function_keyword(keyword)
             job_list = asyncio.run(communitech_scraper(keyword))
+            # print(job_list)
             return jsonify(job_list)
         except Exception as e:
             return jsonify({

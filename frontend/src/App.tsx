@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense, lazy } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
 
 import "./App.css";
+
+const Test = lazy(() => import("./components/test"));
 
 function App() {
   const [data, setData] = useState("");
@@ -21,7 +24,7 @@ function App() {
       });
   }, []);
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
 
     console.log(keyword);
@@ -41,22 +44,29 @@ function App() {
   };
 
   return (
-    <div className="classApp">
-      <header>
-        <h1>Hello from React!</h1>
-        <h1>{data}</h1>
-      </header>
-      <main>
-        <input
-          type="text"
-          value={keyword}
-          onChange={(e) => {
-            setKeyword(e.target.value);
-          }}
-        />
-        <button onClick={handleSubmit}>Search</button>
-      </main>
-    </div>
+    <BrowserRouter>
+      <div className="classApp">
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route path="/test" element={<Test />} />
+          </Routes>
+        </Suspense>
+        <header>
+          <h1>Hello from React!</h1>
+          <h1>{data}</h1>
+        </header>
+        <main>
+          <input
+            type="text"
+            value={keyword}
+            onChange={(e) => {
+              setKeyword(e.target.value);
+            }}
+          />
+          <button onClick={handleSubmit}>Search</button>
+        </main>
+      </div>
+    </BrowserRouter>
   );
 }
 
