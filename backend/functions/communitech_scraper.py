@@ -21,14 +21,18 @@ async def communitech_scraper(keyword):
             # time.sleep(2) # Waits for 2 seconds
             await page.get_by_placeholder("Location").click()
             await page.get_by_placeholder("Type to search").fill("Waterloo Region")
-            await page.click(".sc-beqWaB.kQSjka:first-of-type")
+            await page.click(".sc-beqWaB.qIsge:first-of-type")
             time.sleep(2)
 
             await page.get_by_placeholder("Job title, company or keyword").fill(keyword)
             time.sleep(2)
 
+            # Focus out of searching input
             await page.locator("#content > div.sc-beqWaB.eFnOti > div.sc-beqWaB.sc-gueYoa.krgmev.MYFxR > div.sc-beqWaB.iJyEXG > div > div").click()
-            await page.locator("#content > div.sc-beqWaB.eFnOti > div.sc-beqWaB.sc-gueYoa.krgmev.MYFxR > div.sc-beqWaB.jfIxNQ > button").click()
+
+            button = await page.query_selector("#content > div.sc-beqWaB.eFnOti > div.sc-beqWaB.sc-gueYoa.krgmev.MYFxR > div.sc-beqWaB.jfIxNQ > button")
+            if button:
+                button.click()
 
             element = await page.query_selector("div.sc-beqWaB.iJyEXG > div > div > div > div > b")
             if element:
@@ -42,13 +46,24 @@ async def communitech_scraper(keyword):
             content = await page.content()
             soup = BeautifulSoup(content, "html.parser")
             jobs = soup.find_all("div", class_="job-card")
+            print(jobs)
 
             job_list = []
 
+            '''
             for job in jobs:
                 company = job.find("div", itemprop="hiringOrganization").find("meta", itemprop="name")["content"]
+                print("company")
+                print(company)
+
                 title = job.find('div', itemprop='title').text.strip()
+                print("title")
+                print(title)
+
                 location_tags = job.find("div", itemprop="jobLocation").find_all("span")
+                print("location_tags")
+                print(location_tags)
+
                 locations = []
                 for tag in location_tags:
                     locations.append(tag.text)
@@ -61,7 +76,8 @@ async def communitech_scraper(keyword):
                     "location": locations,
                     "url":url
                 })
-
+            '''
+                
             print(f"Total {len(job_list)} jobs!")
 
             await browser.close()

@@ -9,6 +9,12 @@ CORS(app)
 
 db = {}
 
+@app.route("/")
+# API Address Test
+def index():
+    return "Hi!"
+
+
 @app.route("/api/data")
 def get_data():
     data = {

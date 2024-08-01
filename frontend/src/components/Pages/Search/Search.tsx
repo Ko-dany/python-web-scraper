@@ -1,10 +1,8 @@
-import React, { useState, useEffect, lazy } from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet, Link } from "react-router-dom";
 import axios from "axios";
 
 import "./Search.css";
-
-const Test = lazy(() => import("../../Test"));
 
 function Search() {
   const [data, setData] = useState("");
@@ -29,17 +27,26 @@ function Search() {
 
     console.log(keyword);
     try {
-      const res = await axios.post("http://localhost:5000/search", {
+      console.log("Starting Playwright...");
+      const res: any = await axios.post("http://localhost:5000/search", {
         keyword: keyword,
       });
+
+      console.log("Finishing Playwright...");
+
       setJobs(res.data);
       console.log(jobs);
 
       setResponse("");
       setKeyword("");
     } catch (error) {
-      console.log("Error occurred: ", error);
-      setResponse("Error: Could not get a response from the server.");
+      if (axios.isAxiosError(error) && error.response) {
+        console.log(error.response.data);
+        setResponse(error.response.data);
+      } else {
+        setResponse("Error: Could not get a response from the server.");
+        console.log("Error occurred: ", error, response);
+      }
     }
   };
 

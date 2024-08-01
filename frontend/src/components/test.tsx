@@ -1,7 +1,5 @@
-import React, { lazy } from "react";
+import React from "react";
 import { Outlet, Link } from "react-router-dom";
-
-const Search = lazy(() => import("./Pages/Search/Search"));
 
 const Test: React.FC = () => {
   return (
