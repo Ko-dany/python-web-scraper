@@ -4,12 +4,6 @@ import time
 from bs4 import BeautifulSoup
 import tracemalloc
 
-def page_of_results(number_of_result):
-    full_page = number_of_result //20
-    remainder = number_of_result % 20
-
-    return full_page  if remainder > 0 else full_page - 1
-
 async def communitech_scraper(keyword):
     async with async_playwright() as playwright:
         try:
@@ -18,51 +12,59 @@ async def communitech_scraper(keyword):
             url_communitech = "https://www1.communitech.ca/jobs"
             await page.goto(url_communitech)
 
-            # time.sleep(2) # Waits for 2 seconds
+             # Searching for jobs in Waterloo Region
             await page.get_by_placeholder("Location").click()
             await page.get_by_placeholder("Type to search").fill("Waterloo Region")
             await page.click(".sc-beqWaB.qIsge:first-of-type")
             time.sleep(2)
 
+            # Enter the keyword for job search
             await page.get_by_placeholder("Job title, company or keyword").fill(keyword)
             time.sleep(2)
 
             # Focus out of searching input
-            await page.locator("#content > div.sc-beqWaB.eFnOti > div.sc-beqWaB.sc-gueYoa.krgmev.MYFxR > div.sc-beqWaB.iJyEXG > div > div").click()
+            await page.locator("#content > div.sc-beqWaB.eFnOti > div.sc-beqWaB.sc-gueYoa.krgmev.MYFxR > div.sc-beqWaB.iJyEXG > div > div > div > div").click()
+
 
             button = await page.query_selector("#content > div.sc-beqWaB.eFnOti > div.sc-beqWaB.sc-gueYoa.krgmev.MYFxR > div.sc-beqWaB.jfIxNQ > button")
-            if button:
-                button.click()
+            job_counts = await page.query_selector("div.sc-beqWaB.iJyEXG > div > div > div > div > b")
+            footer = await page.query_selector("#wlc-main > div.sc-beqWaB.sc-gueYoa.kVZzjT.MYFxR.powered-by-footer")
 
-            element = await page.query_selector("div.sc-beqWaB.iJyEXG > div > div > div > div > b")
-            if element:
-                total = await element.text_content()
-                for x in range(page_of_results(int(total))):
-                    time.sleep(3)
-                    await page.keyboard.press("End")
+            if button:
+                await button.click()
+
+            if job_counts:
+                total = await job_counts.text_content()
+                total_count = int(total)
+                pages = total_count // 20 + (1 if total_count % 20 != 0 else 0)
+
+                for x in range(pages):
+                    await footer.scroll_into_view_if_needed()
                     print("Scrolling! => ", x)
+                    await page.wait_for_timeout(5000)
+                    
+
+            time.sleep(10)
             
-            time.sleep(3)
             content = await page.content()
             soup = BeautifulSoup(content, "html.parser")
             jobs = soup.find_all("div", class_="job-card")
-            print(jobs)
+            # print(jobs)
 
             job_list = []
-
-            '''
+            
             for job in jobs:
                 company = job.find("div", itemprop="hiringOrganization").find("meta", itemprop="name")["content"]
-                print("company")
-                print(company)
+                # print("company")
+                # print(company)
 
                 title = job.find('div', itemprop='title').text.strip()
-                print("title")
-                print(title)
+                # print("title")
+                # print(title)
 
                 location_tags = job.find("div", itemprop="jobLocation").find_all("span")
-                print("location_tags")
-                print(location_tags)
+                # print("location_tags")
+                # print(location_tags)
 
                 locations = []
                 for tag in location_tags:
@@ -76,7 +78,7 @@ async def communitech_scraper(keyword):
                     "location": locations,
                     "url":url
                 })
-            '''
+            
                 
             print(f"Total {len(job_list)} jobs!")
 
