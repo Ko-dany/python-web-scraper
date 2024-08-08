@@ -3,6 +3,7 @@ import { Outlet, Link } from "react-router-dom";
 import axios from "axios";
 
 import "./Search.css";
+import { Box, Typography } from "@mui/material";
 
 function Search() {
   const [data, setData] = useState("");
@@ -51,10 +52,9 @@ function Search() {
   };
 
   return (
-    <div className="classApp">
+    <Box sx={{ m: 5 }}>
       <header>
-        <h1>Hello from React!</h1>
-        <h1>{data}</h1>
+        <Typography variant="h2">GET THE JOB LIST</Typography>
       </header>
       <main>
         <input
@@ -65,14 +65,14 @@ function Search() {
           }}
         />
         <button onClick={handleSubmit}>Search</button>
-        <div>
+        <Box>
           <button>
             <Link to="/test">Go to Test Page</Link>
           </button>
           <Outlet />
-        </div>
+        </Box>
       </main>
-    </div>
+    </Box>
   );
 }
 
