@@ -3,7 +3,7 @@ import { Outlet, Link } from "react-router-dom";
 import axios from "axios";
 
 import "./Search.css";
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Divider, TextField, Typography } from "@mui/material";
 
 function Search() {
   const [data, setData] = useState("");
@@ -57,20 +57,37 @@ function Search() {
         <Typography variant="h2">GET THE JOB LIST</Typography>
       </header>
       <main>
-        <input
-          type="text"
-          value={keyword}
-          onChange={(e) => {
-            setKeyword(e.target.value);
-          }}
-        />
-        <button onClick={handleSubmit}>Search</button>
-        <Box>
-          <button>
-            <Link to="/test">Go to Test Page</Link>
-          </button>
-          <Outlet />
+        <Box sx={{ m: 3 }}>
+          <TextField
+            id="standard-basic"
+            label="KEYWORD"
+            color="primary"
+            variant="outlined"
+            value={keyword}
+            onChange={(e) => {
+              setKeyword(e.target.value);
+            }}
+            sx={{
+              width: "100%",
+              my: 2,
+            }}
+          />
+          <Button
+            variant="outlined"
+            onClick={handleSubmit}
+            sx={{ width: "100%" }}
+          >
+            SEARCH
+          </Button>
         </Box>
+
+        {/*<Divider></Divider>
+         <Box>
+          <Button>
+            <Link to="/test">GO TO TEST PAGE</Link>
+          </Button>
+          <Outlet />
+        </Box> */}
       </main>
     </Box>
   );
