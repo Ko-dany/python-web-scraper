@@ -16,11 +16,11 @@ async def communitech_scraper(keyword):
             await page.get_by_placeholder("Location").click()
             await page.get_by_placeholder("Type to search").fill("Waterloo Region")
             await page.click(".sc-beqWaB.qIsge:first-of-type")
-            time.sleep(2)
+            await asyncio.sleep(3)
 
             # Enter the keyword for job search
             await page.get_by_placeholder("Job title, company or keyword").fill(keyword)
-            time.sleep(2)
+            await asyncio.sleep(3)
 
             # Focus out of searching input
             await page.locator("#content > div.sc-beqWaB.eFnOti > div.sc-beqWaB.sc-gueYoa.krgmev.MYFxR > div.sc-beqWaB.iJyEXG > div > div > div > div").click()
@@ -41,10 +41,10 @@ async def communitech_scraper(keyword):
                 for x in range(pages):
                     await footer.scroll_into_view_if_needed()
                     print("Scrolling! => ", x)
-                    await page.wait_for_timeout(5000)
+                    await asyncio.sleep(5)
                     
 
-            time.sleep(10)
+            await asyncio.sleep(10)
             
             content = await page.content()
             soup = BeautifulSoup(content, "html.parser")

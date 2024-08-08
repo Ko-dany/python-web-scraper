@@ -54,6 +54,7 @@ function Search() {
   return (
     <Box sx={{ m: 5 }}>
       <header>
+        <Typography variant="h4">{data}</Typography>
         <Typography variant="h2">GET THE JOB LIST</Typography>
       </header>
       <main>
