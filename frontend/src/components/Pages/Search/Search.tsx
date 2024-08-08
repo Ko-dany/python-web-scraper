@@ -4,12 +4,14 @@ import axios from "axios";
 
 import "./Search.css";
 import { Box, Button, Divider, TextField, Typography } from "@mui/material";
+import Result from "../Result/Result";
 
 function Search() {
-  const [data, setData] = useState("");
+  const [data, setData] = useState(false);
+  const [jobs, setJobs] = useState(false);
+
   const [keyword, setKeyword] = useState("");
   const [response, setResponse] = useState("");
-  const [jobs, setJobs] = useState("");
 
   // Inital Fetching
   useEffect(() => {
@@ -81,7 +83,7 @@ function Search() {
             SEARCH
           </Button>
         </Box>
-
+        {jobs && <Result jobs={jobs}></Result>}
         {/*<Divider></Divider>
          <Box>
           <Button>
