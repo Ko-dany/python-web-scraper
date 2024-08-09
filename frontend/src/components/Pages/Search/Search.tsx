@@ -17,10 +17,10 @@ import Result from "../Result/Result";
 function Search() {
   // const [data, setData] = useState(false);
   const [loadingJobs, setLoadingJobs] = useState(false);
-  const [jobs, setJobs] = useState(null);
-
-  const [keyword, setKeyword] = useState("");
-  const [response, setResponse] = useState("");
+  const [jobs, setJobs] = useState<any>(null);
+  const [exportRef, setExportRef] = useState<string | null>(null);
+  const [keyword, setKeyword] = useState<string>("");
+  const [response, setResponse] = useState<string>("");
 
   // Inital Fetching
   // useEffect(() => {
@@ -36,18 +36,20 @@ function Search() {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-
     setLoadingJobs(true);
 
     console.log(keyword);
     try {
       console.log("Starting Playwright...");
-      const res: any = await axios.post("http://localhost:5000/search", {
-        keyword: keyword,
-      });
+      const responseJobs: any = await axios.post(
+        "http://localhost:5000/search",
+        {
+          keyword: keyword,
+        }
+      );
 
       console.log("Finishing Playwright...");
-      setJobs(res.data);
+      setJobs(responseJobs.data);
       console.log(jobs);
 
       setResponse("");
@@ -65,10 +67,31 @@ function Search() {
     }
   };
 
+  // const handleExport = async () => {
+  //   try {
+  //     const responseExport = await axios.post(
+  //       "http://localhost:5000/export",
+  //       { keyword },
+  //       { responseType: "blob" }
+  //     );
+
+  //     const url = window.URL.createObjectURL(
+  //       new Blob([responseExport.data], { type: "text/csv" })
+  //     );
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.setAttribute("download", `${keyword}.csv`);
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     document.body.removeChild(link);
+  //   } catch (error) {
+  //     console.error("Error exporting data:", error);
+  //   }
+  // };
+
   return (
     <Box sx={{ m: 5 }}>
       <header>
-        {/* <Typography variant="h4">{data}</Typography> */}
         <Typography variant="h2" align="center">
           GET THE JOB LIST
         </Typography>
@@ -97,16 +120,15 @@ function Search() {
             SEARCH
           </Button>
           {loadingJobs && <LinearProgress />}
-          {!loadingJobs && jobs && <Result jobs={jobs} />}
+          {!loadingJobs && jobs && (
+            <Box>
+              {/* <Button onClick={handleExport} sx={{ width: "100%", mb: 3 }}>
+                EXPORT
+              </Button> */}
+              <Result jobs={jobs} />
+            </Box>
+          )}
         </Box>
-
-        {/*<Divider></Divider>
-         <Box>
-          <Button>
-            <Link to="/test">GO TO TEST PAGE</Link>
-          </Button>
-          <Outlet />
-        </Box> */}
       </main>
       <footer>
         <Typography align="center">CREATED BY DAHYUN KO</Typography>
