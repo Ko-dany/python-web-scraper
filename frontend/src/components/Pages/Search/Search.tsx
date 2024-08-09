@@ -39,16 +39,16 @@ function Search() {
 
     setLoadingJobs(true);
 
-    // console.log(keyword);
+    console.log(keyword);
     try {
-      // console.log("Starting Playwright...");
+      console.log("Starting Playwright...");
       const res: any = await axios.post("http://localhost:5000/search", {
         keyword: keyword,
       });
 
-      // console.log("Finishing Playwright...");
+      console.log("Finishing Playwright...");
       setJobs(res.data);
-      // console.log(jobs);
+      console.log(jobs);
 
       setResponse("");
       setKeyword("");
@@ -96,9 +96,10 @@ function Search() {
           >
             SEARCH
           </Button>
+          {loadingJobs && <LinearProgress />}
+          {!loadingJobs && jobs && <Result jobs={jobs} />}
         </Box>
-        {loadingJobs && <LinearProgress />}
-        {!loadingJobs && jobs && <Result jobs={jobs} />}
+
         {/*<Divider></Divider>
          <Box>
           <Button>
@@ -107,6 +108,9 @@ function Search() {
           <Outlet />
         </Box> */}
       </main>
+      <footer>
+        <Typography align="center">CREATED BY DAHYUN KO</Typography>
+      </footer>
     </Box>
   );
 }

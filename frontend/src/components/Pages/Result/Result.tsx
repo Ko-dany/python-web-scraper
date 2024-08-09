@@ -1,4 +1,7 @@
+import * as React from "react";
 import {
+  Box,
+  Link,
   Paper,
   Table,
   TableBody,
@@ -6,7 +9,9 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
+import LaunchIcon from "@mui/icons-material/Launch";
 
 const Result = (props: any) => {
   const { jobs } = props;
@@ -16,10 +21,10 @@ const Result = (props: any) => {
       <Table sx={{ minWidth: 650 }}>
         <TableHead>
           <TableRow>
-            <TableCell>TITLE</TableCell>
-            <TableCell align="right">COMPANY</TableCell>
-            <TableCell align="right">LOCATION</TableCell>
-            <TableCell align="right">URL</TableCell>
+            <TableCell align="left">TITLE</TableCell>
+            <TableCell align="left">COMPANY</TableCell>
+            <TableCell align="left">LOCATION</TableCell>
+            {/* <TableCell align="right">URL</TableCell> */}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -28,12 +33,27 @@ const Result = (props: any) => {
               key={row.name}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
-              <TableCell component="th" scope="row">
-                {row.title}
+              <TableCell component="th" scope="row" align="left">
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography sx={{ mr: 2 }}>{row.title}</Typography>
+                  <a
+                    href={row.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ display: "flex", alignItems: "center" }}
+                  >
+                    <LaunchIcon fontSize="small" />
+                  </a>
+                </Box>
               </TableCell>
-              <TableCell align="right">{row.company}</TableCell>
-              <TableCell align="right">{row.location}</TableCell>
-              <TableCell align="right">{row.url}</TableCell>
+              <TableCell align="left">{row.company}</TableCell>
+              <TableCell align="left">{row.location}</TableCell>
+              {/* <TableCell align="right"></TableCell> */}
             </TableRow>
           ))}
         </TableBody>
