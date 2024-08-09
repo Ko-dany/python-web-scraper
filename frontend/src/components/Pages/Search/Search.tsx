@@ -92,7 +92,7 @@ function Search() {
           <Button
             variant="outlined"
             onClick={handleSubmit}
-            sx={{ width: "100%" }}
+            sx={{ width: "100%", mb: 3 }}
           >
             SEARCH
           </Button>
